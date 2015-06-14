@@ -6,14 +6,9 @@ using namespace std;
 
 class HoughAccumulator {
 public:
-	HoughAccumulator(int width, int height, vector< pair<Point, Point> > pointPairs, Mat img);
+	HoughAccumulator(int width, int height, Mat img);
 	pair<int, int> getMax();
-
-	float weight(Point i, Point j);
-	float symRho(Point i, Point j);
-	float symTheta(Point i, Point j);
-
-	float gradDir(Point a, Mat img);
+	void add(float rho, float theta)
 	
 private:
 	Mat matrix;
@@ -26,5 +21,4 @@ private:
 	int rhoMax;
 	int thetaMax;
 	Mat img;
-	vector< pair<Point, Point> > pointPairs;
 };

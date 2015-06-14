@@ -10,17 +10,15 @@ using namespace std;
 const double PI = 3.14159265358979323846;
 const double E =  2.71828182845904523536;
 
-HoughAccumulator::HoughAccumulator(int width, int height, vector< pair<Point, Point> > pointPairs, Mat img) {
+HoughAccumulator::HoughAccumulator(int width, int height, Mat img) {
 	this->width = width;
 	this->height = height;
-	this->img = img;
-	this->pointPairs = pointPairs;
 	this->diagonal = hypotf(width, height);
 	this->rhoMax = (int)(diagonal / 2) + 1;
 	this->thetaMax = 180;
 	
 	matrix = Mat::zeros(rhoMax, thetaMax, CV_32F);
-
+/*
 	for (i = 0; i < pointPairs.size(); i++) {
 		if (gradDir(pointPairs[i].first, img) - gradDir(pointPairs[i].second, img) == 0) {
 			float rho = symRho(pointPairs[i].first, pointPairs[i].second);
@@ -36,8 +34,14 @@ HoughAccumulator::HoughAccumulator(int width, int height, vector< pair<Point, Po
 				cout << "75%" << endl;
 		}
 	}
+*/
 }
 
+void HoughAccumulator::add(float rho, float theta) {
+	matrix.at<double>(rho, theta) += 1;
+}
+
+/*
 float HoughAccumulator::symRho(Point i, Point j) {
 	float mag;
 
@@ -56,6 +60,7 @@ float HoughAccumulator::symTheta(Point i, Point j) {
 	
 	return theta;
 }
+*/
 
 /*float HoughAccumulator::weight(Point i, Point j) {
 	
@@ -64,6 +69,7 @@ float HoughAccumulator::symTheta(Point i, Point j) {
 	return weight;
 }*/
 
+/*
 float HoughAccumulator::gradDir(Point a, Mat img) {
 	float Gx, Gy, theta;
 	Point p1, p2, p3, p4, p5, p6, p7, p8, p9;
@@ -86,6 +92,7 @@ float HoughAccumulator::gradDir(Point a, Mat img) {
 	else
 		theta = atan2(Gx, Gy); 
 }
+*/
 
 pair<int, int> HoughAccumulator::getMax() {
 	int x, y;

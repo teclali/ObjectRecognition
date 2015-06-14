@@ -22,7 +22,26 @@ void showImg(Mat img) {
     return;
 }
 
-vector< pair<Point, Point> > getPairs(Mat img) {
+float pairRho(Point i, Point j) {
+	float mag;
+
+	mag = ((i.x + j.x) / 2) * (cos ( pairTheta(i, j))) + ((i.y + j.y) / 2) * (sin(pairTheta(i, j)));
+   
+	return mag;
+}
+
+float pairTheta(Point i, Point j) {
+	float theta;	
+
+   	if (j.x - i.x == 0)
+    	theta = 90;
+   	else
+      	theta = atan2((j.y - i.y), (j.x - i.x)) * 180 / PI;
+	
+	return theta;
+}
+
+int accumBuilder(Mat img, hAccum &accumulator) {
 	
 	int width = img.cols;
 	int height = img.rows;
@@ -31,7 +50,7 @@ vector< pair<Point, Point> > getPairs(Mat img) {
 	Canny(img, edgeImg, 100.0, 200.0);
 	
 	vector<Point> edgePix;
-	vector< pair<Point, Point> > pointPair;
+//	vector< pair<Point, Point> > pointPair;
 	pair<Point, Point> tempPair;
 
 	for (int y = 0; y < height; y++)
@@ -43,13 +62,13 @@ vector< pair<Point, Point> > getPairs(Mat img) {
 	for (int i = 0; i < edgePix.size(); i++)
 		for (int j = i; j < edgePix.size(); j++) {
 			tempPair = make_pair(edgePix[i], edgePix[j]);
-			pointPair.push_back(tempPair);
+			accumulator.add(pairMag(tempPair.first, tempPair.second), pairTheta(tempPair.first, tempPair.second));
 		}		
 		
 	cout << edgePix.size() << endl;
-	cout << pointPair.size() << endl;
+//	cout << pointPair.size() << endl;
 	
-	return pointPair;
+	return 0;
 }
 
 Mat drawLine(int rho, int theta, int width, int height, Mat img) {
@@ -80,9 +99,9 @@ int main( int argc, char** argv ) {
 
 	Mat img = imread(argv[1]);
 	
-	vector< pair<Point, Point> > pointPair = getPairs(img);
-	
-	HoughAccumulator hAccum(113, 128, pointPair, img);
+	HoughAccumulator hAccum(113, 128, img);
+
+	getPairs(img, hAccum);	
 	
 	pair<int, int> result = hAccum.getMax();
 
