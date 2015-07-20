@@ -8,7 +8,7 @@ class HoughAccumulator {
 public:
 	HoughAccumulator(int width, int height, Mat img);
 	pair<int, int> getMax();
-	void add(float rho, float theta)
+	void add(float rho, float theta);
 	
 private:
 	Mat matrix;
